@@ -1,0 +1,88 @@
+name: Build Android APK (PR Banner Manager)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    name: Build & Verify Android Debug APK
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - name: 1. Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 2. Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: 3. Setup Java JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: 4. Print Toolchain Versions
+        run: |
+          echo "Node version: $(node -v)"
+          echo "NPM version: $(npm -v)"
+          java -version
+          echo "ANDROID_HOME: $ANDROID_HOME"
+
+      - name: 5. Install Dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: 6. Run TypeScript Validation
+        run: npm run typecheck
+
+      - name: 7. Run Automated Unit Tests (Jalali Calendar & Queries)
+        run: npm test
+
+      - name: 8. Build Production Web Assets (Vite)
+        run: npm run build
+
+      - name: 9. Generate & Validate Android Project, Manifest & Resources
+        run: npm run android:prepare
+
+      - name: 10. Build Android Debug APK with Gradle Wrapper
+        working-directory: android
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: 11. Verify APK Output & Calculate Checksum
+        run: |
+          APK_PATH="android/app/build/outputs/apk/debug/app-debug.apk"
+          if [ ! -f "$APK_PATH" ]; then
+            echo "ERROR: APK file was not generated at $APK_PATH"
+            exit 1
+          fi
+          SIZE=$(stat -c%s "$APK_PATH")
+          echo "APK Size: $SIZE bytes"
+          if [ "$SIZE" -lt 100000 ]; then
+            echo "ERROR: APK size is unexpectedly small ($SIZE bytes)"
+            exit 1
+          fi
+          mkdir -p release-output
+          cp "$APK_PATH" "release-output/PR-Banner-Manager-debug.apk"
+          sha256sum "release-output/PR-Banner-Manager-debug.apk" > "release-output/SHA256SUMS.txt"
+          cat "release-output/SHA256SUMS.txt"
+
+      - name: 12. Upload Installable Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PR-Banner-Manager-debug-APK
+          path: |
+            release-output/PR-Banner-Manager-debug.apk
+            release-output/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 90

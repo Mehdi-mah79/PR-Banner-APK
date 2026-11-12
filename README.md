@@ -1,10 +1,40 @@
-# مدیریت بنرهای روابط عمومی (PR Banner Manager)
+# PR Banner Manager
 
-برنامهٔ اندرویدی، فارسی، راست‌به‌چپ و **۱۰۰٪ آفلاین** برای سازمان‌دهی، بایگانی، جست‌وجو و یادآوری بنرها و مناسبت‌های روابط عمومی بر پایهٔ **React + Vite + Capacitor + IndexedDB** و سیستم اعلان بومی اندروید (`@capacitor/local-notifications`).
+A **100% offline Android application** designed to organize, archive, search, and manage public relations banners and events.
 
-## ویژگی‌های کلیدی نسخهٔ اندروید
-- **کاملاً آفلاین و بدون نیاز به سرور:** تمامی اطلاعات بنرها، دسته‌بندی‌ها، برچسب‌ها، یادآورها و تصاویر اصلی به صورت تراکنشی در حافظهٔ دائمی دستگاه (IndexedDB) ذخیره می‌شوند.
-- **اعلان و آلارم واقعی اندروید:** متصل به `@capacitor/local-notifications` برای ارسال ناتیفیکیشن در زمان مقرر حتی هنگام بسته بودن برنامه.
-- **تقویم شمسی دقیق (جلالی):** پشتیبانی کامل از سال‌های کبیسه، انتخابگر تاریخ شمسی و محاسبهٔ خودکار مناسبت‌های پیش‌رو.
-- **پشتیبان‌گیری و بازیابی کامل (ZIP / JSON / CSV):** ساخت بستهٔ پشتیبان ZIP شامل تصاویر اصلی و فایل `manifest.json` با هش `SHA-256`.
-- **تولید خودکار APK در گیت‌هاب (GitHub Actions):** دارای پایپ‌لاین خودکار در `.github/workflows/android-build.yml` که بدون نیاز به نصب Android Studio روی سیستم شما، فایل APK را تولید و در بخش Artifacts آمادهٔ دانلود می‌کند.
+Built with **React + Vite + Capacitor + IndexedDB**, featuring native Android notifications powered by `@capacitor/local-notifications`.
+
+## Key Features
+
+- **Fully Offline – No Server Required:** All banner records, categories, tags, reminders, and original images are stored transactionally in the device's persistent storage using IndexedDB.
+
+- **Native Android Notifications and Alarms:** Integrated with `@capacitor/local-notifications` to deliver scheduled notifications at the designated time, even when the application is closed, subject to Android notification and scheduling permissions.
+
+- **Accurate Persian (Jalali) Calendar:** Full support for leap years, a Persian calendar date picker, and automatic calculation of upcoming occasions and events.
+
+- **Complete Backup and Restore (ZIP / JSON / CSV):** Creates ZIP backup packages containing original images and a `manifest.json` file with SHA-256 integrity hashes.
+
+- **Automated APK Builds with GitHub Actions:** Includes an automated CI/CD workflow at `.github/workflows/android-build.yml`. It builds the Android APK without requiring Android Studio to be installed on your local computer and publishes the generated APK as a downloadable GitHub Actions Artifact.
+
+## Technology Stack
+
+- React
+- TypeScript
+- Vite
+- Capacitor
+- IndexedDB
+- Capacitor Local Notifications
+- GitHub Actions
+- Android SDK and Gradle
+
+## Privacy and Data Security
+
+PR Banner Manager is designed with an offline-first architecture. Application data is stored locally on the user's device, without requiring a remote server or continuous internet connection.
+
+## Build and Deployment
+
+The project uses GitHub Actions to automate the Android APK build process. Once the workflow completes successfully, the generated APK is available for download from the workflow's Artifacts section.
+
+## Project Goal
+
+The goal of PR Banner Manager is to provide a reliable, accessible, and efficient tool for public relations professionals and organizations to manage their visual communication materials, organize important events, and receive timely reminders.
